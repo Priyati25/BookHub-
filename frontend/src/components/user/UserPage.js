@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef} from 'react'
 import { Navigate,  useNavigate } from 'react-router-dom'
 import { Container, Input, Button, Loader, Icon, Message, Card, Image } from 'semantic-ui-react'
 import { useAuth } from '../context/AuthContext'
 import { bookApi } from '../misc/BookApi'
 import { handleLogError } from '../misc/Helpers'
+import Toast from './Toast';
 import axios from 'axios'
 import '../../styles/UserPage.css'
 
@@ -20,6 +21,7 @@ function UserPage() {
 
   
   const navigate = useNavigate() 
+  const toastRef = useRef(null)
 
   useEffect(() => {
     handleGetBooks()
@@ -56,29 +58,35 @@ function UserPage() {
     }
   }
 
-  // const handleAddToWishlist = async (bookIsbn) => {
-  //   try {
-  //     const userId = user.id
-  
-  //     // Ensure you are calling the backend server (port 8080)
-  //     await axios.post(`http://localhost:8080/api/wishlist/${userId}/${bookIsbn}`, {}, {
-  //       headers: { 
-  //         'Authorization': `Basic ${user.authdata}`  // Send Authorization Header
-  //       }
-  //     })
-  
-  //     setWishlistMsg(`Book (ISBN: ${bookIsbn}) added to wishlist!`)
-  //     setWishlistError('')
-  //   } catch (error) {
-  //     console.error('Failed to add book to wishlist', error)
-  //     setWishlistError('Failed to add book to wishlist.')
-  //   }
-  // }
-  
-  
+  //Add book to wishlist
+  const handleAddToWishlist = async (book) => {
+    try {
+      const userId = user.id
+      await bookApi.addToWishlist(user, userId, book.isbn)
+
+      // Display floating toast message with book title
+      setWishlistMsg(`"${book.title}" added to wishlist!`)
+      if (toastRef.current) {
+        toastRef.current.showToast(`"${book.title}" added to wishlist!`)
+      }
+
+      setWishlistError('')
+    } catch (error) {
+      console.error('Failed to add book to wishlist', error)
+      setWishlistError('Failed to add book to wishlist.')
+      setWishlistMsg('')
+    }
+  }
+
   const handleBookClick = (isbn) => {
     navigate(`/reader/${isbn}`)   // Navigate to EPUB viewer
   }
+
+  const getCoverImage = (isbn) => {
+    return isbn
+      ? `https://books.google.com/books/content?vid=ISBN${isbn}&printsec=frontcover&img=1&zoom=1&source=gbs_api`
+      : '/images/placeholder.png';
+  };
 
   if (!isUser) {
     return <Navigate to='/' />
@@ -86,6 +94,8 @@ function UserPage() {
 
   return (
     <Container className="user-page">
+    <Toast ref={toastRef} />
+    
       <div className="search-section">
         <Input
           icon="search"
@@ -97,11 +107,12 @@ function UserPage() {
         <Button color="orange" onClick={handleSearchBook}>
           Search
         </Button>
-      </div>
 
-      {/* Display Messages */}
-      {/* {wishlistMsg && <Message positive>{wishlistMsg}</Message>}
-      {wishlistError && <Message negative>{wishlistError}</Message>} */}
+        <Button color="blue" onClick={() => navigate('/wishlist')}>
+                    View Wishlist
+        </Button>
+
+      </div>
 
       {isBooksLoading ? (
         <Loader active inline="centered" />
@@ -116,13 +127,22 @@ function UserPage() {
                   onClick={() => handleBookClick(book.isbn)}  
                   style={{ cursor: 'pointer' }} 
                 >
+                  
                   <Image
-                    src={book.isbn ? `http://covers.openlibrary.org/b/isbn/${book.isbn}-M.jpg` : '/images/placeholder.png'}
+                    src={getCoverImage(book.isbn)}
                     onError={(e) => { e.target.src = '/images/placeholder.png' }}
                     alt={book.title}
                     wrapped
                     ui={false}
                   />
+
+                  {/* <Image
+                    src={book.isbn ? `http://covers.openlibrary.org/b/isbn/${book.isbn}-M.jpg` : '/images/placeholder.png'}
+                    onError={(e) => { e.target.src = '/images/placeholder.png' }}
+                    alt={book.title}
+                    wrapped
+                    ui={false}
+                  /> */}
                   <Card.Content>
                     <Card.Header>{book.title}</Card.Header>
                     <Card.Meta>Author: {book.author}</Card.Meta>
@@ -130,15 +150,18 @@ function UserPage() {
                       {book.description || 'No description available'}
                     </Card.Description>
                   </Card.Content>
-                  {/* <Card.Content extra>
+                  <Card.Content extra>
                     <Button
                       color="orange"
-                      onClick={() => handleAddToWishlist(book.isbn)}
+                      onClick={(e) => {
+                        e.stopPropagation();  // Prevent navigating to reader when clicking wishlist button
+                        handleAddToWishlist(book);
+                      }}
                       fluid
                     >
                       <Icon name='heart' /> Add to Wishlist
                     </Button>
-                  </Card.Content> */}
+                  </Card.Content>
                 </Card>
               ))}
             </Card.Group>
