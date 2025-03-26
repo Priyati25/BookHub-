@@ -6,7 +6,6 @@ import com.fsd.bookapi.user.User;
 import com.fsd.bookapi.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,42 +18,52 @@ public class WishlistService {
     private final UserRepository userRepository;
     private final BookRepository bookRepository;
 
-    public List<Book> getWishlistByUser(Long userId) {
+    // Add to wishlist
+    public WishlistDTO addToWishlist(Long userId, String bookIsbn) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-        List<Wishlist> wishlistItems = wishlistRepository.findByUser(user);
+        Book book = bookRepository.findById(bookIsbn)
+                .orElseThrow(() -> new ResourceNotFoundException("Book not found with ISBN: " + bookIsbn));
 
-        return wishlistItems.stream()
-                .map(Wishlist::getBook)
-                .collect(Collectors.toList());
-    }
-
-    @Transactional
-    public void addToWishlist(Long userId, String isbn) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
-
-        Book book = bookRepository.findByIsbn(isbn)
-                .orElseThrow(() -> new IllegalArgumentException("Book not found"));
-
+        // ✅ Use Book object in the repository call
         if (wishlistRepository.existsByUserAndBook(user, book)) {
-            throw new IllegalArgumentException("Book already in wishlist");
+            throw new IllegalStateException("Book is already in wishlist");
         }
 
         Wishlist wishlist = new Wishlist();
         wishlist.setUser(user);
         wishlist.setBook(book);
-        wishlistRepository.save(wishlist);
+
+        Wishlist savedWishlist = wishlistRepository.save(wishlist);
+
+        return new WishlistDTO(savedWishlist.getId(), userId, book.getIsbn(), book.getTitle());
     }
 
-    @Transactional
-    public void removeFromWishlist(Long userId, String isbn) {
+    // Get user's wishlist
+    public List<WishlistDTO> getWishlist(Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-        Book book = bookRepository.findByIsbn(isbn)
-                .orElseThrow(() -> new IllegalArgumentException("Book not found"));
+        List<Wishlist> wishlists = wishlistRepository.findByUser(user);
+
+        return wishlists.stream()
+                .map(w -> new WishlistDTO(
+                        w.getId(),
+                        userId,
+                        w.getBook().getIsbn(),
+                        w.getBook().getTitle()
+                ))
+                .collect(Collectors.toList());
+    }
+
+    // Remove from wishlist
+    public void removeFromWishlist(Long userId, String bookIsbn) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        Book book = bookRepository.findById(bookIsbn)
+                .orElseThrow(() -> new ResourceNotFoundException("Book not found"));
 
         wishlistRepository.deleteByUserAndBook(user, book);
     }

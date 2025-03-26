@@ -29,4 +29,16 @@ public class Wishlist {
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
+
+    // ✅ Add getter and setter for book ISBN
+    public String getBookIsbn() {
+        return book != null ? book.getIsbn() : null;
+    }
+
+    public void setBookIsbn(String isbn) {
+        if (book == null) {
+            book = new Book();
+        }
+        book.setIsbn(isbn);
+    }
 }

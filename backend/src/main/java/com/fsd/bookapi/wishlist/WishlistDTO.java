@@ -5,11 +5,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor  // Added this to avoid constructor error
 public class WishlistDTO {
-    private Long id;          // Wishlist ID
-    private Long userId;      // User ID
-    private String isbn;      // Book ISBN (renamed for consistency)
-    private String title;     // Book Title (added for readability)
+    private Long id;
+    private Long userId;
+    private String bookIsbn;
+    private String bookTitle;  // Added field to include the book title
 }

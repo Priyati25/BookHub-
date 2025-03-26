@@ -1,6 +1,5 @@
 package com.fsd.bookapi.wishlist;
 
-import com.fsd.bookapi.book.Book;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,25 +13,30 @@ public class WishlistController {
 
     private final WishlistService wishlistService;
 
+    // ✅ Add to wishlist
+    @PostMapping("/{userId}/{isbn}")
+    public ResponseEntity<WishlistDTO> addToWishlist(
+            @PathVariable Long userId,
+            @PathVariable String isbn) {
+
+        WishlistDTO wishlistDTO = wishlistService.addToWishlist(userId, isbn);
+        return ResponseEntity.ok(wishlistDTO);
+    }
+
+    // ✅ Get wishlist by user ID
     @GetMapping("/{userId}")
-    public ResponseEntity<List<Book>> getWishlist(@PathVariable Long userId) {
-        List<Book> wishlist = wishlistService.getWishlistByUser(userId);
+    public ResponseEntity<List<WishlistDTO>> getWishlist(
+            @PathVariable Long userId) {
+
+        List<WishlistDTO> wishlist = wishlistService.getWishlist(userId);
         return ResponseEntity.ok(wishlist);
     }
 
-    @PostMapping("/add")
-    public ResponseEntity<String> addToWishlist(
-            @RequestParam Long userId,
-            @RequestParam String isbn) {
-
-        wishlistService.addToWishlist(userId, isbn);
-        return ResponseEntity.ok("Book added to wishlist");
-    }
-
-    @DeleteMapping("/remove")
+    // ✅ Remove from wishlist
+    @DeleteMapping("/{userId}/{isbn}")
     public ResponseEntity<String> removeFromWishlist(
-            @RequestParam Long userId,
-            @RequestParam String isbn) {
+            @PathVariable Long userId,
+            @PathVariable String isbn) {
 
         wishlistService.removeFromWishlist(userId, isbn);
         return ResponseEntity.ok("Book removed from wishlist");
