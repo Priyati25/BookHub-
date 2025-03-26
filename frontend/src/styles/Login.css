@@ -1,0 +1,74 @@
+/* Center the login container */
+.login-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #f5f5f5;
+}
+
+/* Style the form */
+.login-form {
+    display: flex;
+    flex-direction: column;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 350px;
+}
+
+/* Input field container with icons */
+.input-container {
+    display: flex;
+    align-items: center;
+    background: #f9f9f9;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+/* Input fields */
+.login-input {
+    border: none;
+    background: transparent;
+    flex: 1;
+    font-size: 16px;
+    outline: none;
+}
+
+/* Icon inside input */
+.input-icon {
+    color: #888;
+    margin-right: 10px;
+}
+
+/* Button */
+.login-button {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.login-button:hover {
+    background-color: #0056b3;
+}
+
+/* Error message */
+.error-message {
+    color: red;
+    margin-top: 10px;
+}
+
+/* Signup link */
+.signup-link {
+    margin-top: 10px;
+    font-size: 14px;
+}

@@ -1,0 +1,72 @@
+/* Main container */
+.epub-reader-container {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #2a76b4; 
+    color: #333;
+}
+
+/* EPUB viewer container */
+.react-reader-wrapper {
+    width: 90vw;
+    height: 90vh;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    background: white;
+    overflow: hidden;
+}
+
+/* Loading message */
+.loading {
+    font-size: 20px;
+    color: #555;
+    text-align: center;
+}
+
+/* Error container */
+.epub-error-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100vh;
+    background-color: #f8f8f8;  
+    color: #333;
+}
+
+/* Error message style */
+.epub-error-message {
+    text-align: center;
+    padding: 30px;
+    background: #fff;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    max-width: 500px;
+    animation: fadeIn 0.8s ease-in-out;
+}
+
+.epub-error-message h2 {
+    font-size: 28px;
+    color: #e74c3c;      /* Red color for error title */
+    margin-bottom: 15px;
+}
+
+.epub-error-message p {
+    font-size: 18px;
+    color: #555;
+}
+
+/* Add animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

@@ -1,0 +1,29 @@
+# Ignore unnecessary files and folders
+
+# Backend (Spring Boot)
+backend/target/
+backend/.classpath
+backend/.project
+backend/.settings/
+backend/.idea/
+backend/*.iml
+backend/.vscode/
+backend/*.log
+
+# Frontend (React)
+frontend/node_modules/
+frontend/build/
+frontend/.env.local
+frontend/.env.development.local
+frontend/.env.production.local
+frontend/.cache/
+frontend/yarn-error.log
+frontend/.vscode/
+
+# IDE and OS-related files
+*.log
+*.tmp
+*.DS_Store
+*.bak
+*.swp
+Thumbs.db

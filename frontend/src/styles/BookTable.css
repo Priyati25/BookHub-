@@ -1,0 +1,84 @@
+.book-table {
+    margin-top: 40px;                /* Proper spacing from form */
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background: #fefefe;
+    transition: all 0.3s ease-in-out;
+}
+
+.book-table:hover {
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    transform: translateY(-5px);
+}
+
+/*Search Input */
+.book-search-input {
+    width: 100%;
+    max-width: 450px;
+    padding: 12px;
+    border: 1px solid #ffffff;
+    border-radius: 8px;
+    transition: box-shadow 0.3s ease-in-out;
+    margin-bottom: 20px;          
+}
+
+.book-search-input:focus {
+    outline: none;
+    box-shadow: 0 0 10px #007bff;
+    border-color: #007bff;
+}
+
+.book-table img {
+    transition: transform 0.3s, box-shadow 0.3s;
+    border-radius: 8px;
+    max-width: 120px;
+    max-height: 160px;
+    object-fit: cover;
+}
+
+.book-table img:hover {
+    transform: scale(1.15);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+
+.book-table th {
+    background: #f4f4f4;
+    color: #333;
+    font-weight: bold;
+    text-transform: uppercase;
+    padding: 12px;
+}
+
+.book-table tr {
+    transition: background 0.3s;
+}
+
+.book-table tr:hover {
+    background: #f1f1f1;
+}
+
+
+.book-table .ui.button {
+    transition: all 0.3s;
+    padding: 8px 12px;
+    font-weight: bold;
+}
+
+.book-table .ui.button:hover {
+    background: #ff5252 !important;
+    color: white !important;
+}
+
+
+@media screen and (max-width: 768px) {
+    .book-search-input {
+        width: 100%;
+    }
+    
+    .book-table img {
+        max-width: 100px;
+        max-height: 140px;
+    }
+}

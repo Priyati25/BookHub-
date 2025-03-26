@@ -1,0 +1,13 @@
+.ui.tabular.menu {
+    background: #f2711c !important;
+    color: white !important;
+  }
+  
+  .ui.tabular.menu .item {
+    color: white !important;
+  }
+  
+  .ui.tabular.menu .item:hover {
+    background: #e65100 !important;
+  }
+  
